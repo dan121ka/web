@@ -95,12 +95,14 @@ h1 {
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--primario);
-    text-align: center;
-    box-shadow: 0 0 5px var(--sombra);
-    padding: 20px;
-    border-radius: 10px;
-    transition: transform .5s ease-in-out;
+    background-color: var(--primario); /* */
+    text-align: center; /* */
+    /* Modificamos el box-shadow base y añadimos transition para suavizar el cambio */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Una sombra base más sutil */
+    padding: 20px; /* */
+    border-radius: 10px; /* */
+    transition: transform .5s ease-in-out, box-shadow 0.7s ease-in-out; /* Añadimos box-shadow a la transición */
+    /* z-index: 1; No es necesario aquí si .carta.abierta tiene uno mayor */
 }
 
 .contenido {
@@ -160,17 +162,20 @@ h1 {
 }
 
 .carta.mostrar-carta {
-    transform: translateY(-290px);
-    transition: transform .5s ease-in-out;
+    transform: translateY(-290px); /* */
+    transition: transform .5s ease-in-out, box-shadow 0.7s ease-in-out .5s; /* Retrasamos inicio de brillo */
 }
 
 .carta.cerrando-carta {
-    transform: translateY(-290px);
-    transition: transform .5s ease-in-out;
+    transform: translateY(-290px); /* */
+    transition: transform .5s ease-in-out, box-shadow 0.3s ease-out; /* Quitamos brillo más rápido */
+    animation: none; /* Detenemos la animación de brillo al cerrar */;
 }
 
 .carta.abierta {
-    z-index: 10000;
+    z-index: 10000; /* */
+    /* Animación de brillo para la carta abierta */
+    animation: shiningCard 2s infinite alternate ease-in-out;
 }
 
 .envoltura-sobre.desactivar-sobre .sobre::before {
@@ -220,8 +225,89 @@ h1 {
 
 }
 
+/* ... (tu CSS existente) ... */
+
+body {
+    /* Asegúrate de que el body pueda contener elementos posicionados absolutamente */
+    position: relative; 
+    overflow-x: hidden; /* Para evitar scroll horizontal si algún corazón se va un poco */
+    background: var(--fondo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.floating-heart {
+    position: absolute;
+    bottom: -20px; /* Comienzan desde abajo, fuera de la vista */
+    font-family: 'Arial', sans-serif; /* O cualquier fuente que tenga un buen símbolo de corazón, o usamos un SVG/imagen */
+    color: var(--corazon); /* Usa el color de corazón que ya tienes definido */
+    opacity: 0; /* Comienzan invisibles */
+    animation-name: floatUp, fadeInOut;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    /* Las duraciones y delays se establecen desde JS para variabilidad */
+    z-index: -1; /* Para que estén detrás de todo */
+}
+
+/* Alternativa usando un carácter de corazón (♥ o ♡) o un SVG */
+.floating-heart::before {
+    content: '♥'; /* Puedes usar ♥, ♡, o incluso un emoji si la fuente lo soporta bien */
+    /* Si usas un emoji, asegúrate de que el tamaño de fuente en .floating-heart lo haga visible */
+}
 
 
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+    20% { /* Aparece gradualmente */
+        opacity: 0.7;
+    }
+    80% { /* Se mantiene visible mientras sube */
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-100vh); /* Sube hasta la parte superior de la pantalla */
+        opacity: 0;
+    }
+}
 
+/* Podríamos tener una animación de parpadeo simple o integrar el parpadeo en floatUp */
+/* Si quieres un parpadeo más distintivo mientras flotan: */
+/*
+@keyframes pulsate {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
 
+.floating-heart {
+    animation-name: floatUp, pulsate;  <-- Descomenta y ajusta si quieres esta otra
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+}
+*/
 
+/* --- Fin de los estilos para corazones flotantes --- */
+@keyframes shiningCard {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 105, 180, 0.4),  /* Sombra rosa suave */
+                     0 0 25px rgba(255, 105, 180, 0.3),
+                     0 0 5px var(--corazon); /* Un toque del color del corazón */
+    }
+    100% {
+        box-shadow: 0 0 25px rgba(255, 105, 180, 0.7), /* Sombra rosa más intensa */
+                     0 0 40px rgba(255, 105, 180, 0.5),
+                     0 0 10px #fff, /* Destello blanco */
+                     0 0 15px var(--corazon); /* Color del corazón más pronunciado */
+    }
+}
