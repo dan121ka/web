@@ -29,3 +29,20 @@ document.addEventListener("click", (e) => {
 
     } 
 })
+
+// Al final de tu archivo script_v2.js, añade lo siguiente:
+
+document.addEventListener('DOMContentLoaded', () => {
+    const body = document.querySelector('body');
+    const numHearts = 20; // Número de corazones que quieres
+
+    for (let i = 0; i < numHearts; i++) {
+        let heart = document.createElement('div');
+        heart.classList.add('floating-heart');
+        heart.style.left = Math.random() * 100 + 'vw'; // Posición horizontal aleatoria
+        heart.style.animationDuration = (Math.random() * 3 + 2) + 's'; // Duración de animación aleatoria (entre 2s y 5s)
+        heart.style.animationDelay = Math.random() * 2 + 's'; // Retraso de animación aleatorio
+        heart.style.fontSize = (Math.random() * 10 + 10) + 'px'; // Tamaño aleatorio
+        body.appendChild(heart);
+    }
+});
